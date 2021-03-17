@@ -1,0 +1,29 @@
+.edit{
+    margin: 15px;
+}
+
+.edit-label{
+
+}
+
+.edit-label-title{
+    display: inline-block;
+    width: 120px;
+    margin-right: 20px;
+    text-transform: capitalize;
+}
+
+.edit-label-input,
+.edit-label-textArea{
+    width: 250px;
+    outline: none;
+}
+
+.edit-error{
+    color: red;
+    margin: 0 10px;
+}
+
+.error-border{
+    border: 1px solid red ;
+}

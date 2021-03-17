@@ -1,0 +1,52 @@
+.create_card {
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+}
+
+.create_card button {
+    margin-right: 50px;
+}
+
+.search {
+    width: 350px;
+    margin: 25px auto;
+}
+
+.search span {
+    margin-right: 25px;
+}
+
+.search input {
+    outline: none;
+    width: 250px;
+    height: 20px;
+    font-size: 16px;
+}
+
+.cards {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.pagination {
+    margin: 15px;
+    display: flex;
+    justify-content: flex-end;
+}
+.pagination div {
+    margin-right: 5px;
+    padding: 2px 10px;
+    border: 1px solid slateblue;
+    cursor: pointer;
+}
+
+.pagination .activePage {
+    border: 1px solid red;
+}
+
+.pagination div:hover {
+    background-color: #f2f2f2;
+}
