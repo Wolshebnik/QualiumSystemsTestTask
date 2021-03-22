@@ -4,6 +4,7 @@ import { useHistory } from 'react-router';
 import { requestHttp } from '../../httpRequest';
 
 import './cartView.css';
+import { catchException } from '../../utils';
 
 const countSum = ( array ) => {
 	return array.reduce( ( prev, next ) => prev + (next.price * next.quantity), 0 );
@@ -15,15 +16,12 @@ const Cart = () => {
 	const [ totalSum, setTotalSum ] = useState( 0 );
 
 	useEffect( () => {
-		try {
 			requestHttp( 'cart' ).then( response => {
 				setCart( response );
 				setTotalSum( countSum( response ) );
-			} );
-		} catch (e) {
-			console.log( e );
-			history.push( '*' );
-		}
+			} )
+			.catch(e => catchException(e,history.push ) );
+
 	}, [ history ] );
 
 	const increase = ( id ) => {
@@ -37,14 +35,10 @@ const Cart = () => {
 			}
 		} );
 
-		try{
-			requestHttp( `cart/${ id }`, 'PATCH', { quantity: num } );
+			requestHttp( `cart/${ id }`, 'PATCH', { quantity: num } )
+			.catch(e => catchException(e,history.push ) );
 			setCart( array );
 			setTotalSum( countSum( array ) );
-		}catch (e){
-			console.log( e );
-			history.push( '*' );
-		}
 	};
 
 	const decrease = ( id ) => {
@@ -58,28 +52,22 @@ const Cart = () => {
 			}
 		} );
 
-		try{
-			requestHttp( `cart/${ id }`, 'PATCH', { quantity: num } );
+			requestHttp( `cart/${ id }`, 'PATCH', { quantity: num } )
+			.catch(e => catchException(e,history.push ) );
 			setCart( array );
 			setTotalSum( countSum( array ) );
-		}catch (e){
-			console.log( e );
-			history.push( '*' );
-		}
 	};
 
 	const removeItem = ( id ) => {
-		try {
-			requestHttp( `cart/${ id }`, 'DELETE' );
-			requestHttp( `products/${ id }`, 'PATCH', { inCart: false } );
+			requestHttp( `cart/${ id }`, 'DELETE' )
+			.catch(e => catchException(e,history.push ) );
+
+			requestHttp( `products/${ id }`, 'PATCH', { inCart: false } )
+			.catch(e => catchException(e,history.push ) );
 
 			const cartWithoutItem = cart.filter( item => item.id !== id );
 			setCart( cartWithoutItem );
 			setTotalSum( countSum( cartWithoutItem ) );
-		} catch (e) {
-			console.log( e );
-			history.push( '*' );
-		}
 	};
 
 	const goBack = () => {

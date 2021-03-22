@@ -3,7 +3,7 @@ import { useHistory, useRouteMatch } from 'react-router';
 
 import { ItemInput } from '../../components';
 import { requestHttp } from '../../httpRequest';
-import { authValidation } from '../../utils';
+import { authValidation, catchException } from '../../utils';
 
 import './createView.css';
 
@@ -25,12 +25,9 @@ const CreateCard = () => {
 
 	useEffect( () => {
 		if (match.params.id) {
-			try {
-				requestHttp( `products/${ match.params.id }` ).then( res => res.json() ).then( res => setCard( res ) );
-			} catch (e) {
-				console.log( e );
-				history.push( '*' );
-			}
+			requestHttp( `products/${ match.params.id }` )
+			.then( res => res.json() ).then( res => setCard( res ) )
+			.catch( e => catchException( e, history.push ) );
 		}
 	}, [ history, match.params.id ] );
 
@@ -54,7 +51,6 @@ const CreateCard = () => {
 		}
 	};
 
-
 	const goBack = ( e ) => {
 		e.preventDefault();
 		history.goBack();
@@ -66,19 +62,17 @@ const CreateCard = () => {
 			alert( 'Fields must not be empty' );
 			return;
 		}
-		try {
-			if (match.params.id) {
-				requestHttp( `products/${ match.params.id }`, 'PATCH', card );
-				requestHttp( `cart/${ match.params.id }`, 'PATCH', card );
-			} else {
-				requestHttp( 'products', 'POST', card );
-			}
-			history.push( '/' );
-		} catch (e) {
-			console.log( e );
-			history.push( '*' );
-		}
+		if (match.params.id) {
+			requestHttp( `products/${ match.params.id }`, 'PATCH', card )
+			.catch( e => catchException( e, history.push ) );
 
+			requestHttp( `cart/${ match.params.id }`, 'PATCH', card )
+			.catch( e => catchException( e, history.push ) );
+		} else {
+			requestHttp( 'products', 'POST', card )
+			.catch( e => catchException( e, history.push ) );
+		}
+		history.push( '/' );
 	};
 
 	return (

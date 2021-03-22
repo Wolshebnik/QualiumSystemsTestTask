@@ -5,14 +5,14 @@
       "title": "Audi",
       "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim, qui?",
       "price": 100,
-      "inCart": false
+      "inCart": true
     },
     {
       "id": "BMW",
       "title": "iphone 5c",
       "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim, qui?",
       "price": 150,
-      "inCart": true
+      "inCart": false
     },
     {
       "id": "ox98i1f5idg",
@@ -122,10 +122,10 @@
   ],
   "cart": [
     {
-      "id": "BMW",
-      "title": "iphone 5c",
+      "id": "bix27468fjc",
+      "title": "Audi",
       "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim, qui?",
-      "price": 150,
+      "price": 100,
       "quantity": 1
     }
   ]

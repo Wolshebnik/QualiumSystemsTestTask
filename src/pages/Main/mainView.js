@@ -3,6 +3,7 @@ import { useHistory } from 'react-router';
 
 import { requestHttp } from '../../httpRequest';
 import { ItemCard } from '../../components';
+import { catchException } from '../../utils';
 
 import './main.css';
 
@@ -25,26 +26,18 @@ const Main = () => {
 
 	useEffect( () => {
 		if (!inputSearch) {
-			try {
-				requestHttp( `products?_page=${ currentPage }&_limit=10` )
-				.then( res => {
-					const totalRecords = res.headers.get( 'X-Total-Count' );
-					setNumberOfPage( createArrayOfPages( totalRecords ) );
-					return res.json();
-				} )
-				.then( response => {
-					setCards( response );
-				} );
-			} catch (e) {
-				console.log( e );
-				history.push( '*' );
-			}
+			requestHttp( `products?_page=${ currentPage }&_limit=10` )
+			.then( res => {
+				const totalRecords = res.headers.get( 'X-Total-Count' );
+				setNumberOfPage( createArrayOfPages( totalRecords ) );
+				return res.json();
+			} )
+			.then( response => {
+				setCards( response );
+			} )
+			.catch( e => catchException( e, history.push ) );
 		}
-
 	}, [ history, currentPage, inputSearch ] );
-
-	useEffect( () => {
-	}, [ history, inputSearch ] );
 
 	const moveToPage = ( event ) => {
 		event.target.name === 'toCreate'
@@ -53,53 +46,47 @@ const Main = () => {
 	};
 
 	const deleteItem = async ( id ) => {
-		try {
-			let findCard = cards.find( item => item.id === id );
+		let findCard = cards.find( item => item.id === id );
 
-			await requestHttp( `products/${ id }`, 'DELETE' );
-			findCard.inCart && await requestHttp( `cart/${ id }`, 'DELETE' );
+		await requestHttp( `products/${ id }`, 'DELETE' )
+		.catch( e => catchException( e, history.push ) );
 
-			const cardsWithoutDeleted = cards.filter( item => item.id !== id );
-			setCards( cardsWithoutDeleted );
-			setInputSearch( '' );
-		} catch (e) {
-			console.log( e );
-			history.push( '*' );
-		}
+		findCard.inCart && await requestHttp( `cart/${ id }`, 'DELETE' )
+		.catch( e => catchException( e, history.push ) );
+
+		const cardsWithoutDeleted = cards.filter( item => item.id !== id );
+		setCards( cardsWithoutDeleted );
+		setInputSearch( '' );
+
+
 	};
 
 	const addToCart = async ( id ) => {
-		try {
-			const findToCart = cards.find( item => item.id === id );
-			let { inCart, ...rest } = findToCart;
-			inCart = true;
+		const findToCart = cards.find( item => item.id === id );
+		let { inCart, ...rest } = findToCart;
+		inCart = true;
 
-			await requestHttp( `products/${ id }`, 'PUT', { ...rest, inCart } );
-			await requestHttp( `cart`, 'POST', { ...rest, quantity: 1 } );
+		await requestHttp( `products/${ id }`, 'PUT', { ...rest, inCart } )
+		.catch( e => catchException( e, history.push ) );
 
-			const cardsWithCart = cards.map( item => item.id === id ? { ...rest, inCart } : item );
-			setCards( cardsWithCart );
-		} catch (e) {
-			console.log( e );
-			history.push( '*' );
-		}
+		await requestHttp( `cart`, 'POST', { ...rest, quantity: 1 } )
+		.catch( e => catchException( e, history.push ) );
+
+		const cardsWithCart = cards.map( item => item.id === id ? { ...rest, inCart } : item );
+		setCards( cardsWithCart );
 	};
 
 	const dataSearch = ( event ) => {
 		const text = event.target.value.toLowerCase();
 		setInputSearch( text );
-		try {
-			if (text) {
-				requestHttp( `products?title_like=${ text }` )
-				.then( res => res.json() )
-				.then( res => {
-					setNumberOfPage( createArrayOfPages( res.length ) );
-					setCards( res );
-				} );
-			}
-		} catch (e) {
-			console.log( e );
-			history.push( '*' );
+		if (text) {
+			requestHttp( `products?title_like=${ text }` )
+			.then( res => res.json() )
+			.then( res => {
+				setNumberOfPage( createArrayOfPages( res.length ) );
+				setCards( res );
+			} )
+			.catch( e => catchException( e, history.push ) );
 		}
 	};
 
