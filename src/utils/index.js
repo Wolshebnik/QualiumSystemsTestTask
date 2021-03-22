@@ -26,6 +26,6 @@ export const authValidation = ( keyInput, value ) => {
 };
 
 export const catchException = ( error, toNoMatch ) => {
-	console.log( error );
-	toNoMatch( '*' );
+	console.log( `Crashed during request to DB ${error.message}` );
+	toNoMatch( '/error' );
 };

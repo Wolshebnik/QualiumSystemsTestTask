@@ -16,11 +16,10 @@ const Cart = () => {
 	const [ totalSum, setTotalSum ] = useState( 0 );
 
 	useEffect( () => {
-			requestHttp( 'cart' ).then( response => {
+			requestHttp('cart' ).then( response => {
 				setCart( response );
 				setTotalSum( countSum( response ) );
 			} )
-			.catch(e => catchException(e,history.push ) );
 
 	}, [ history ] );
 
@@ -35,7 +34,7 @@ const Cart = () => {
 			}
 		} );
 
-			requestHttp( `cart/${ id }`, 'PATCH', { quantity: num } )
+			requestHttp(`cart/${ id }`, 'PATCH', { quantity: num } )
 			.catch(e => catchException(e,history.push ) );
 			setCart( array );
 			setTotalSum( countSum( array ) );
@@ -52,17 +51,17 @@ const Cart = () => {
 			}
 		} );
 
-			requestHttp( `cart/${ id }`, 'PATCH', { quantity: num } )
+			requestHttp(`cart/${ id }`, 'PATCH', { quantity: num } )
 			.catch(e => catchException(e,history.push ) );
 			setCart( array );
 			setTotalSum( countSum( array ) );
 	};
 
 	const removeItem = ( id ) => {
-			requestHttp( `cart/${ id }`, 'DELETE' )
+			requestHttp(`cart/${ id }`, 'DELETE' )
 			.catch(e => catchException(e,history.push ) );
 
-			requestHttp( `products/${ id }`, 'PATCH', { inCart: false } )
+			requestHttp(`products/${ id }`, 'PATCH', { inCart: false } )
 			.catch(e => catchException(e,history.push ) );
 
 			const cartWithoutItem = cart.filter( item => item.id !== id );

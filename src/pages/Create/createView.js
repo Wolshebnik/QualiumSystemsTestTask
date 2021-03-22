@@ -25,7 +25,7 @@ const CreateCard = () => {
 
 	useEffect( () => {
 		if (match.params.id) {
-			requestHttp( `products/${ match.params.id }` )
+			requestHttp(`products/${ match.params.id }` )
 			.then( res => res.json() ).then( res => setCard( res ) )
 			.catch( e => catchException( e, history.push ) );
 		}
@@ -63,13 +63,13 @@ const CreateCard = () => {
 			return;
 		}
 		if (match.params.id) {
-			requestHttp( `products/${ match.params.id }`, 'PATCH', card )
+			requestHttp(`products/${ match.params.id }`, 'PATCH', card )
 			.catch( e => catchException( e, history.push ) );
 
-			requestHttp( `cart/${ match.params.id }`, 'PATCH', card )
+			requestHttp(`cart/${ match.params.id }`, 'PATCH', card )
 			.catch( e => catchException( e, history.push ) );
 		} else {
-			requestHttp( 'products', 'POST', card )
+			requestHttp('products', 'POST', card )
 			.catch( e => catchException( e, history.push ) );
 		}
 		history.push( '/' );

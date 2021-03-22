@@ -26,7 +26,7 @@ const Main = () => {
 
 	useEffect( () => {
 		if (!inputSearch) {
-			requestHttp( `products?_page=${ currentPage }&_limit=10` )
+			requestHttp(  `products?_page=${ currentPage }&_limit=10` )
 			.then( res => {
 				const totalRecords = res.headers.get( 'X-Total-Count' );
 				setNumberOfPage( createArrayOfPages( totalRecords ) );
@@ -48,10 +48,10 @@ const Main = () => {
 	const deleteItem = async ( id ) => {
 		let findCard = cards.find( item => item.id === id );
 
-		await requestHttp( `products/${ id }`, 'DELETE' )
+		await requestHttp(`products/${ id }`, 'DELETE' )
 		.catch( e => catchException( e, history.push ) );
 
-		findCard.inCart && await requestHttp( `cart/${ id }`, 'DELETE' )
+		findCard.inCart && await requestHttp(`cart/${ id }`, 'DELETE' )
 		.catch( e => catchException( e, history.push ) );
 
 		const cardsWithoutDeleted = cards.filter( item => item.id !== id );
@@ -66,10 +66,10 @@ const Main = () => {
 		let { inCart, ...rest } = findToCart;
 		inCart = true;
 
-		await requestHttp( `products/${ id }`, 'PUT', { ...rest, inCart } )
+		await requestHttp(`products/${ id }`, 'PUT', { ...rest, inCart } )
 		.catch( e => catchException( e, history.push ) );
 
-		await requestHttp( `cart`, 'POST', { ...rest, quantity: 1 } )
+		await requestHttp(`cart`, 'POST', { ...rest, quantity: 1 } )
 		.catch( e => catchException( e, history.push ) );
 
 		const cardsWithCart = cards.map( item => item.id === id ? { ...rest, inCart } : item );
@@ -80,7 +80,7 @@ const Main = () => {
 		const text = event.target.value.toLowerCase();
 		setInputSearch( text );
 		if (text) {
-			requestHttp( `products?title_like=${ text }` )
+			requestHttp(`products?title_like=${ text }` )
 			.then( res => res.json() )
 			.then( res => {
 				setNumberOfPage( createArrayOfPages( res.length ) );
